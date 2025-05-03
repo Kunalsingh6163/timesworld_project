@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Container, Row, Col, Button, Card, Offcanvas } from "react-bootstrap";
+import { Container, Row, Col, Button, Offcanvas } from "react-bootstrap";
 import Footer from "./Footer";
 import ImageSlider from "../slider/Slider";
 import ImageCard from "../slider/Card";
@@ -10,11 +10,17 @@ import axios from "axios";
 
 const image = ["/img1.svg", "/img2.svg", "/img3.svg", "/img4.svg"];
 
+type Country = {
+  name: string;
+  region: string;
+  flag: string;
+};
+
 const Home = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [countries, setCountries] = useState([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [visibleCount, setVisibleCount] = useState(12);
-  const [selectedRegion, setSelectedRegion] = useState("All");
+  const [selectedRegion, setSelectedRegion] = useState<string>("All");
 
   const regions = ["All", "Asia", "Europe"];
 
@@ -43,7 +49,7 @@ const Home = () => {
   const filteredCountries =
     selectedRegion === "All"
       ? countries
-      : countries.filter((country) => country.region === selectedRegion);
+      : countries.filter((country: { region: string; }) => country.region === selectedRegion);
 
   return (
     <Container fluid className="px-8 py-8">
