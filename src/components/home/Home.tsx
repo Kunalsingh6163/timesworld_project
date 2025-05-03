@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import ImageSlider from "../slider/Slider";
 import ImageCard from "../slider/Card";
 import WelcomeSection from "./Welcome";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import axios from "axios";
 
@@ -15,6 +15,8 @@ type Country = {
   region: string;
   flag: string;
 };
+
+const API_URL = import.meta.env.VITE_COUNTRIES_API;
 
 const Home = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -34,9 +36,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await axios.get(
-          "https://restcountries.com/v2/all?fields=name,region,flag"
-        );
+        const response = await axios.get(API_URL);
         setCountries(response.data);
       } catch (error) {
         console.error("Error fetching countries:", error);
@@ -46,11 +46,11 @@ const Home = () => {
     fetchCountries();
   }, []);
 
-  const filteredCountries =
-    selectedRegion === "All"
+  const filteredCountries = useMemo(() => {
+    return selectedRegion === "All"
       ? countries
-      : countries.filter((country: { region: string; }) => country.region === selectedRegion);
-
+      : countries.filter((c) => c.region === selectedRegion);
+  }, [countries, selectedRegion]);
   return (
     <Container fluid className="px-8 py-8">
       <div className="md:mr-4 md:ml-4">
