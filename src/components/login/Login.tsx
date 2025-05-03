@@ -6,6 +6,7 @@ import { SlSocialGoogle, SlSocialFacebook } from "react-icons/sl";
 import { LuLinkedin } from "react-icons/lu";
 import { FiTwitter } from "react-icons/fi";
 import { useNavigate } from "react-router";
+import { Button } from "react-bootstrap";
 
 interface FormData {
   username: string;
@@ -38,8 +39,20 @@ const Login: React.FC = () => {
 
   const validateForm = (): FormErrors => {
     const errors: FormErrors = {};
-    if (!formData.username.trim()) errors.username = "Username is required";
-    if (!formData.password.trim()) errors.password = "Password is required";
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()[\]{}\-_+=~`|:;"'<>,./?\\]).{8,}$/;
+
+    if (!formData.username.trim()) {
+      errors.username = "Username is required";
+    }
+
+    if (!formData.password.trim()) {
+      errors.password = "Password is required";
+    } else if (!passwordRegex.test(formData.password)) {
+      errors.password =
+        "Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character";
+    }
+
     return errors;
   };
 
@@ -61,7 +74,7 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-start justify-between bg-white px-8 md:px-16">
       <div className="w-full md:w-1/2 p-8 md:p-16 bg-white">
-        <h2 className="text-[32px] font-[Noto-Sans] font-bold mb-2 leading-[42px] text-[#3d3d3d]">
+        <h2 className="sm:w1/2  text-[32px] font-[Noto-Sans] font-bold mb-2 leading-[42px] text-[#3d3d3d]">
           Sign In
         </h2>
         <p className="text-[16px] text-[#3d3d3d] font-bold leading-[26px] mb-6">
@@ -73,27 +86,28 @@ const Login: React.FC = () => {
             Create an account
           </a>
         </p>
-
         <form className="space-y-4 text-[#3d3d3d]" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username or email"
-            name="username"
-            required
-            value={formData.username}
-            onChange={handleChange}
-            className="w-[280px] h-[48px] px-4 py-2 border-black border-2 text-[#3d3d3d]"
-          />
-          {formErrors.username && <p>{formErrors.username}</p>}
-          <br></br>
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-[280px] h-[48px] px-4 py-2 border-black border-2 text-[#3d3d3d]"
-          />
+          <div className="flex flex-col items-start">
+            <input
+              type="text"
+              placeholder="Username or email"
+              name="username"
+              required
+              value={formData.username}
+              onChange={handleChange}
+              className="w-[280px] h-[48px] px-4 py-2 border-black border-2 text-[#3d3d3d]"
+            />
+            {formErrors.username && <p>{formErrors.username}</p>}
+            <br></br>
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-[280px] h-[48px] px-4 py-2 border-black border-2 text-[#3d3d3d]"
+            />
+          </div>
           {formErrors.password && <p>{formErrors.password}</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
           <div className="flex items-center">
@@ -110,12 +124,13 @@ const Login: React.FC = () => {
             </label>
           </div>
 
-          <button
+          <Button
             type="submit"
-            className="w-[280px] h-[48px] px-4 py-2 border-black border-2  text-white  bg-[#3c3c3c] font-[Noto-Sans]"
+            variant="dark"
+            className="w-[280px] h-[48px] px-4 py-2"
           >
             Sign In
-          </button>
+          </Button>
         </form>
 
         <div className="flex items-center my-6 w-[280px]">
